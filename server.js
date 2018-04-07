@@ -11,20 +11,23 @@ const products = require('./products.json');
 const typeDefs = `
   type Query { 
   	products: [Product]
-  	product(sku: String!):Product
+  	product(sku: String!): Product
   }
   type Product { name: String, image: String, image_alt: String, price: Float, sku: String, price_sale: Float }
   type Mutation {
   	createProduct( name: String!, image: String!, image_alt: String!, price: Float!, sku: String!, price_sale: Float! ): Product
-  	deleteProduct(sku: String!): Product
-  	updateProduct(sku: String!): Product
+  	deleteProduct( sku: String!): Product
+  	updateProduct( sku: String!): Product
   }
 `;
 
 // The resolvers
 const resolvers = {
   Query: { 
-  	products: () => products
+    products: () => { return products },
+    product: (root, args) => {
+      return products.find(obj => obj.sku === args.sku);
+    }
   },
   Mutation: {
   	createProduct: (root, args) => {

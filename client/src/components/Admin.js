@@ -3,6 +3,38 @@ import products from './products.json';
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
+const ADD_PRODUCT = gql`
+	mutation createproduct() {
+  		name
+  		image
+  		image_alt
+  		price
+  		sku
+  		price_sale
+	}
+`
+
+const AddAProduct = () => {
+	return (
+		<Mutation mutation={ADD_PRODUCT}>
+		{(createproduct, {data}) => (
+			<div>
+				<form onSubmit={ e => {
+					e.preventDefault();
+					createproduct
+				}}>
+					<label>Name<input type="text"></label>
+					<label>SKU<input type="text"></label>
+					<label>Image URL<input type="text"></label>
+					<label>Image Alt Tag<input type="text"></label>
+					<label>Price<input type="text"></label>
+					<label>Sale Price<input type="text"></label>
+				</form>
+			</div>
+		)}
+	)
+}
+
 const ADD_TODO = gql`
   mutation addTodo($type: String!) {
     addTodo(type: $type) {
