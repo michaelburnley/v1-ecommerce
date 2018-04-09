@@ -4,7 +4,6 @@ import Product from './components/Product';
 import Admin from './components/Admin'
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import gql from "graphql-tag"; 
 
 const client = new ApolloClient();
 

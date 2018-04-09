@@ -1,12 +1,12 @@
+//Dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const fs = require('fs');
-var path = require('path');
 var auth = require('./auth.js');
 
-// Some fake data
+//Database Files
 const products = require('./products.json');
 const users = require('./users.json');
 
@@ -89,13 +89,13 @@ const resolvers = {
   }
 };
 
-// Put together a schema
+//Put together the schema
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
 });
 
-
+//Run the server on Port: 5000, to be connected to React App through proxy.
 const app = express();
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));

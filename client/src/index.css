@@ -4,14 +4,33 @@ body {
   font-family: sans-serif;
 }
 
-.buy-btn {
+form {
+	width: 50%;
+	margin: auto;
+}
+
+input {
+	width: 100%;
+}
+
+a {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.btn {
 	width: 75%;
 	border: 2px solid black;
-	margin: 15px 0px 10px 22px;
+	margin: 15px 0px 10px 15px;
 	cursor: pointer;
 	padding: 10px;
 	background: #54a7ff;
 	border-radius: 5px;
+}
+
+.submit {
+	width: 100%;
+	margin: initial;
 }
 
 .product-container {
@@ -32,16 +51,13 @@ body {
 	background: white;
 }
 
-form {
-	width: 100%;
+.products {
+	background: #80808040;
 }
 
-input {
-	width: 100%;
-}
-
-label {
-	
+.product-name {
+	font-weight: bold;
+	font-size: 20px;
 }
 
 #header {
@@ -58,15 +74,7 @@ label {
 
 #form-container {
 	width: 50%;
-}
-
-.products {
-	background: #80808040;
-}
-
-a {
-	text-decoration: none;
-	font-weight: bold;
+	margin: auto;
 }
 
 #email {
@@ -81,7 +89,3 @@ a {
 	color: red;
 }
 
-.product-name {
-	font-weight: bold;
-	font-size: 20px;
-}

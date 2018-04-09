@@ -2,6 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
+//GraphQL query for active products. Resolver located in server.js
 const PRODUCT_QUERY = gql`
 		{ product(active: true)
 			{
@@ -15,7 +16,10 @@ const PRODUCT_QUERY = gql`
   		}
   	`
 
+//Product-detail block render. Called from ProductQuery.
 const ProductDetail = (props) => {
+
+	//Prints SKU buy button clicked on.
 	const handleClick = (e) => {
 		e.preventDefault();
 		props.handleClick(props.product_details.sku);
@@ -30,12 +34,13 @@ const ProductDetail = (props) => {
 					{
 						props.product_details.price_sale > 0.0 ? <div className="sale-price">{props.product_details.price_sale}</div> : null
 					}
-					<div className="buy-btn" onClick={handleClick}>Buy Now</div>
+					<div className="buy btn" onClick={handleClick}>Buy Now</div>
 				</div>
 			</div>
 	)
 }
 
+//ApolloClient Product Query for GraphQL. Resolver located in server.js
 const ProductQuery = (props) => (
 
 	<Query query={PRODUCT_QUERY}>
@@ -44,7 +49,7 @@ const ProductQuery = (props) => (
 			if (error) return `Error! ${error.message}`;
 			let arr = [];
 			if (data.product.length > 0) {
-				data.product.map((p) => {
+				data.product.forEach((p) => {
 					arr.push(
 		 			<ProductDetail
 		 				product_details={p} 
@@ -60,6 +65,7 @@ const ProductQuery = (props) => (
 	</Query>
 )
 
+//Simple header for A E S T H E T I C S
 const Header = (props) => {
 	return(
 		<div id="header">
@@ -68,6 +74,8 @@ const Header = (props) => {
 	)
 }
 
+
+//Just a footer with contact information
 const Footer = (props) => {
 	return (
 		<div id="footer">
@@ -76,6 +84,8 @@ const Footer = (props) => {
 	)
 }
 
+
+//Final rendering block for the entire component
 const Product = (props) => {
 	const handleClick = (sku) => {
 		let a = "Handle purchase of " + sku;
