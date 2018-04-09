@@ -1,1 +1,29 @@
-[{"image":"https://vignette.wikia.nocookie.net/papermario/images/7/74/PMCS_Goomba_Art.png","image_alt":"Image Alt","name":"Test SKU","price":14.99,"price_sale":0,"sku":"test","active":true},{"image":"https://vignette.wikia.nocookie.net/papermario/images/7/74/PMCS_Goomba_Art.png","image_alt":"Image Alt","name":"Test SKU2","price":24.99,"price_sale":0,"sku":"test2","active":true}]
+[
+  {
+    "active": true,
+    "image": "https://vignette.wikia.nocookie.net/papermario/images/7/74/PMCS_Goomba_Art.png",
+    "image_alt": "Image Alt",
+    "name": "Test SKU",
+    "price": 14.99,
+    "price_sale": 0,
+    "sku": "test"
+  },
+  {
+    "active": false,
+    "image": "https://vignette.wikia.nocookie.net/papermario/images/7/74/PMCS_Goomba_Art.png",
+    "image_alt": "Image Alt",
+    "name": "Test SKU2",
+    "price": 24.99,
+    "price_sale": 15.99,
+    "sku": "test2"
+  },
+  {
+    "active": true,
+    "image": "https://vignette.wikia.nocookie.net/papermario/images/7/74/PMCS_Goomba_Art.png",
+    "image_alt": "Image Alt",
+    "name": "Test SKU3",
+    "price": 54.99,
+    "price_sale": 0,
+    "sku": "test3"
+  }
+]

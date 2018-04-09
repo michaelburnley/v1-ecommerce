@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Product from './components/Product';
+import Admin from './components/Admin'
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
 import gql from "graphql-tag"; 
@@ -14,6 +15,7 @@ class App extends Component {
       <ApolloProvider client={client}>
         <div className="App">
           <Product />
+          <Admin />
         </div>
       </ApolloProvider>
     );

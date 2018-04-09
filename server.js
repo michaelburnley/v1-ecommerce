@@ -3,31 +3,51 @@ const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const fs = require('fs');
+var path = require('path');
+var auth = require('./auth.js');
 
 // Some fake data
 const products = require('./products.json');
+const users = require('./users.json');
 
-// The GraphQL schema in string form
+// GraphQL Schema
 const typeDefs = `
   type Query { 
   	products: [Product]
-  	product(sku: String!): Product
+  	sku_lookup(sku: String!): Product
+    product(active: Boolean): [Product]
+    users: [User]
+    user(username: String!, password: String!): User
   }
   type Product { name: String, image: String, image_alt: String, price: Float, sku: String, price_sale: Float }
+  type User { username: String, password: String, logged_in: Boolean}
   type Mutation {
-  	createProduct( name: String!, image: String!, image_alt: String!, price: Float!, sku: String!, price_sale: Float! ): Product
+  	createProduct( name: String!, image: String!, image_alt: String!, price: Float!, sku: String!, price_sale: Float!, active: Boolean! ): Product
   	deleteProduct( sku: String!): Product
   	updateProduct( sku: String!): Product
+    createUser(username: String!, password: String!): User
   }
 `;
 
-// The resolvers
 const resolvers = {
   Query: { 
     products: () => { return products },
-    product: (root, args) => {
+    sku_lookup: (root, args) => {
       return products.find(obj => obj.sku === args.sku);
-    }
+    },
+    product: (root, args) => {
+      return products.filter(obj => obj.active === args.active);
+    },
+    user: (root, args) => {
+      let a = users.find(obj => obj.username === args.username);
+      if(a === undefined) {
+        return;
+      } else {
+        logged_in = auth.login(args.password, a.password, a);
+        return logged_in;
+      }
+    },
+    users: () => { return users }
   },
   Mutation: {
   	createProduct: (root, args) => {
@@ -38,11 +58,12 @@ const resolvers = {
   			image_alt: args.image_alt,
   			price: args.price,
   			sku: args.sku,
-  			price_sale: args.price_sale
+  			price_sale: args.price_sale,
+        active: args.active
   		};
   		old_data.push(new_data);
-  		console.log(old_data);
   		fs.writeFile("products.json", JSON.stringify(old_data));
+      return new_data;
   	},
   	deleteProduct: (root, args) => {
   		let newdata = products.filter(obj => obj.sku !== args.sku);
@@ -50,7 +71,21 @@ const resolvers = {
   	},
   	updateProduct: (root, args) => {
 
-  	}
+  	},
+    createUser: (root, args) => {
+      let old_users = users;
+      hash = auth.signup(args.password);
+      hash.then(() => {
+        let new_user = {
+          username: args.username,
+          password: hash,
+          logged_in: false
+        }
+        old_users.push(new_user);
+        fs.writeFile("users.json", JSON.stringify(old_users))
+      })
+
+    }
   }
 };
 
@@ -60,18 +95,10 @@ const schema = makeExecutableSchema({
   resolvers,
 });
 
-// Initialize the app
+
 const app = express();
-
-app.use('/admin', bodyParser.json(), graphqlExpress({ schema }));
-
-// The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
-
-// GraphiQL, a visual editor for queries
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
-
-// Start the server
 app.listen(5000, () => {
-  console.log('Go to http://localhost:5000/graphiql to run queries!');
+  console.log('Server running!');
 });

@@ -1,94 +1,87 @@
 import React, { Component } from 'react';
-import products from './products.json'; 
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import Product from './Product';
 
 const ADD_PRODUCT = gql`
-	mutation createproduct() {
-  		name
-  		image
-  		image_alt
-  		price
-  		sku
-  		price_sale
+	mutation createProduct($name: String!, $image: String!, $image_alt: String!, $price: Float!, $sku: String!, $price_sale: Float!, $active: Boolean!) {
+		createProduct(name: $name, image: $image, image_alt: $image_alt, price: $price, sku: $sku, price_sale: $price_sale, active: $active) {
+			name
+	  		image
+	  		image_alt
+	  		price
+	  		sku
+	  		price_sale
+		}
 	}
 `
 
+const DELETE_PRODUCT = gql`
+	mutation deleteProduct($sku: String!) {
+		deleteProduct(sku: $sku) {
+			sku
+			image
+			name
+		}
+	}
+`
+
+// const DeleteProduct = () => {
+// 	let delete;
+
+// 	return (
+// 		<Mutation mutation={DELETE_PRODUCT}>
+// 			{
+// 				(deleteProduct, { data }) => {
+// 					<Product />
+// 					<input type="checkbox" onClick={(e) => {
+// 						deleteProduct({ variables: { }});
+// 					}}/>
+// 				}
+// 			}
+// 		</Mutation>
+// 	)
+// }
+
 const AddAProduct = () => {
+
+	let name;
+	let image;
+	let image_alt;
+	let price;
+	let sku;
+	let price_sale;
+	let active;
 	return (
 		<Mutation mutation={ADD_PRODUCT}>
-		{(createproduct, {data}) => (
-			<div>
-				<form onSubmit={ e => {
-					e.preventDefault();
-					createproduct
-				}}>
-					<label>Name<input type="text"></label>
-					<label>SKU<input type="text"></label>
-					<label>Image URL<input type="text"></label>
-					<label>Image Alt Tag<input type="text"></label>
-					<label>Price<input type="text"></label>
-					<label>Sale Price<input type="text"></label>
-				</form>
-			</div>
-		)}
+			{
+				(createProduct, { data }) => (
+					<div id="form-container">
+						<form onSubmit={(e) => {
+							e.preventDefault();
+							createProduct({ variables: {name: name.value, image: image.value, image_alt: image_alt.value, price: price.value, sku: sku.value, price_sale: price_sale.value, active: active.checked}});
+							name.value = '';
+							image.value = '';
+							image_alt.value = '';
+							price.value = '';
+							sku.value = '';
+							price_sale.value = '';
+							active.value = false;
+						}}>
+							<label>Name<input ref={ node => {name = node;}} /></label>
+							<label>SKU<input ref={ node => {sku = node;}} /></label>
+							<label>Image URL<input ref={ node => {image = node;}} /></label>
+							<label>Image Alt<input ref={ node => {image_alt = node;}} /></label>
+							<label>Price<input ref={ node => {price = node;}} /></label>
+							<label>Sale Price<input ref={ node => {price_sale = node;}} /></label>
+							<label>Active?<input type="checkbox" ref={ node => {active = node}}/></label>
+							<button type="submit">Create Product</button>
+						</form>
+					</div>
+				)
+			}
+		</Mutation>
 	)
 }
 
-const ADD_TODO = gql`
-  mutation addTodo($type: String!) {
-    addTodo(type: $type) {
-      id
-      type
-    }
-  }
-`;
-
-const AddAProduct = () => {
-	<Mutation
-		mutation={ADD_TODO}
-		update={(cache, { data: { addTodo }}) => {
-			const { todos } = cache.readQuery({ query: GET_TODOS });
-			cache.writeQuery({
-				query: GET_TODOS,
-				data: { todos: todos.concat([addTodo])}
-			})
-		}}
-	>
-		{ addTodo => (
-			<div>
-				<form
-					onSubmit={e => {
-						e.preventDefault();
-						addTodo({ variables: { type: input.value }});
-						input.value = ""
-					}}
-				>
-					<input
-						ref={node => {
-							input = node;
-						}}
-					/>
-					<button type="submit">Add Todo</button>
-				</form>
-			</div>
-		)}
-	</Mutation>
-};
-
-class Admin extends Component {
-	constructor() {
-		super();
-		this.state = {
-			user: ""
-		}
-	}
-
-	render() {
-		return (
-			<div className="admin-panel">
-
-			</div>
-		);
-	}
-}
+export default AddAProduct;
